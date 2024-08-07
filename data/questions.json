@@ -1,0 +1,17 @@
+[
+    {
+        "id": 1,
+        "question": "What is 2 + 2?",
+        "answers": ["4", "6", "8", "10"]
+    },
+    {
+        "id": 2,
+        "question": "What is 5 + 5?",
+        "answers": ["10", "15", "20", "25"]
+    },
+    {
+        "id": 3,
+        "question": "What is 10 + 10?",
+        "answers": ["20", "30", "40", "50"]
+    }
+]
