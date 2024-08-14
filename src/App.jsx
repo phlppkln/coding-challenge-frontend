@@ -1,24 +1,47 @@
-import { useEffect, useState } from 'react'
-import './App.css'
+import { useState } from "react";
+import "./App.css";
 
-import IterationForm from './components/new-iteration/IterationForm.jsx'
+import CreateIterationView from "./views/CreateQuestionnaireView.jsx";
+import DashboardView from "./views/DashboardView.jsx";
+
+/* 
+
+local storage object structure
+
+myIterations:[{
+  - id: number
+    createdAt: Date
+    finished: boolean
+    deleted: boolean
+    myTitle: string
+    myAnswers: [{
+      - question: string
+      - answers: [{
+        - text: string
+        - selected: boolean
+      }]
+    }]
+}]
+ */
 
 function App() {
+  const [currentView, setCurrentView] = useState("");
 
-  useEffect(() => {
-    // load dashboard view
+  /**
+   * basic custom router for application
+   * @param { string } view - name of view to load
+   */
+  const getView = () => {
+    if (currentView === "") {
+      return <DashboardView startView={setCurrentView} />;
+    } else if (currentView === "dashboard") {
+      return <DashboardView startView={setCurrentView} />;
+    } else if (currentView === "create-iteration") {
+      return <CreateIterationView startView={setCurrentView} />;
+    }
+  };
 
-
-return () => { 
-  //TODO: clearn up local storage
+  return <div className="App container">{getView()}</div>;
 }
-  }, [])
 
-  return (
-    <>
-      <IterationForm />
-    </>
-  )
-}
-
-export default App
+export default App;
