@@ -12,7 +12,7 @@ const DashboardView = (props) => {
 
   useEffect(() => {
     // load myIterations from local storage
-    let tmp = localStorageHelper.getMyIterationsfromLocalStorage();
+    let tmp = localStorageHelper.getMyIterationsFromLocalStorage();
     if (tmp === null) {
       tmp = [];
     }
@@ -36,12 +36,16 @@ const DashboardView = (props) => {
   };
 
   const openIterationShowcase = (id) => {
+    if (selectedIteration && selectedIteration.id == id) {
+      setSelectedIteration();
+      return;
+    }
     setSelectedIteration(myIterations.find((iteration) => iteration.id === id));
   };
 
   const clearAllIterations = () => {
     localStorageHelper.clearAllIterations();
-    window.location.reload();
+    setSelectedIteration();
     setMyIterations([]);
   };
 
@@ -68,7 +72,11 @@ const DashboardView = (props) => {
             <div
               key={iteration.id}
               className="iterations-container"
-              style={selectedIteration && selectedIteration.id === iteration.id ? selectedIterationContainerStyle : myIterationsContainerStyle}
+              style={
+                selectedIteration && selectedIteration.id === iteration.id
+                  ? selectedIterationContainerStyle
+                  : myIterationContainerStyle
+              }
               onClick={() => openIterationShowcase(iteration.id)}
             >
               <div className="iteration-title">{iteration.myTitle}</div>
@@ -79,19 +87,32 @@ const DashboardView = (props) => {
     );
   };
 
+  const getIterationShowcaseContainer = () => {
+    if (selectedIteration) {
+      return (
+        <div style={selectedIterationShowcaseContainerStyle}>
+          {getIterationShowcase()}
+        </div>
+      );
+    }
+  };
+
   const myStyle = {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-around",
     padding: "1rem",
     margin: "1rem",
     border: "1px solid #ccc",
     borderRadius: "4px",
   };
 
-  const myIterationsContainerStyle = {
+  const myIterationContainerStyle = {
     padding: "1rem",
     margin: "1rem",
+    border: "1px solid #ccc",
+    borderRadius: "4px",
+    backgroundColor: "#f0f0f0",
+    cursor: "pointer",
+    width: "20rem",
+    textAlign: "center",
   };
 
   const selectedIterationContainerStyle = {
@@ -100,6 +121,9 @@ const DashboardView = (props) => {
     border: "2px solid black",
     borderRadius: "4px",
     backgroundColor: "#f0f0f0",
+    width: "20rem",
+    textAlign: "center",
+    cursor: "pointer",
   };
 
   const selectedIterationShowcaseContainerStyle = {
@@ -110,26 +134,19 @@ const DashboardView = (props) => {
   };
 
   return (
-    <div className="dashboard-container" style={myStyle}>
-      <div
-        className="my-iterations-container"
-        style={myIterationsContainerStyle}
-      >
+    <div className="dashboard-container row" style={myStyle}>
+      <div className="my-iterations-container col">
         <h1>My Iterations</h1>
-
         {loadMyIterationsList()}
-        <div className="button-bar">
+        <div className="button-bar row">
           <Button onClick={clearAllIterations}>Clear All Iterations</Button>
           <Button variant="contained" onClick={createNewIterationBtnClicked}>
             Create New Iteration
           </Button>
         </div>
       </div>
-      <div
-        className="iteration-showcase-container"
-        style={selectedIterationShowcaseContainerStyle}
-      >
-        {getIterationShowcase()}
+      <div className="iteration-showcase-container col">
+        {getIterationShowcaseContainer()}
       </div>
     </div>
   );

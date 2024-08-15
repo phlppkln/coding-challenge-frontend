@@ -7,7 +7,7 @@ import Box from "@mui/material/Box";
 import MobileStepper from "@mui/material/MobileStepper";
 import Question from "../components/new-iteration/Question.jsx";
 
-//import * as localStorageHelper from "../helpers/localStorageHelper.js";
+import * as localStorageHelper from "../helpers/localStorageHelper.js";
 
 /**
  * A React component that represents the view for creating a new iteration.
@@ -111,23 +111,15 @@ function CreateIterationView(props) {
    * @param {boolean} iterationFinished true if iteration is finished
    */
   const addIterationToLocalStorage = (iterationFinished) => {
-    let iterations = JSON.parse(localStorage.getItem("myIterations"));
-
-    if (iterations === null || iterations.length === 0) {
-      iterations = [];
-    }
-
     const newIteration = {
-      id: iterations.length + 1,
       createdAt: new Date(),
       finished: iterationFinished,
       deleted: false,
       myTitle: myTitle,
       myAnswers: myQuestionnaire,
     };
-
-    iterations.push(newIteration);
-    localStorage.setItem("myIterations", JSON.stringify(iterations));
+    
+    localStorageHelper.addIterationToLocalStorage(newIteration);
   };
 
   const createIterationBtnClicked = () => {

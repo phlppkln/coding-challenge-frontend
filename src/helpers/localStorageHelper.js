@@ -9,6 +9,12 @@ export const addIterationToLocalStorage = (newIteration) => {
       localStorage.setItem("myIterations", JSON.stringify([]));
     }
     let myIterations = JSON.parse(localStorage.getItem("myIterations"));
+    if(myIterations === null || myIterations.length === 0) {
+      myIterations = [];
+    }
+    // add next id to new iteration
+    newIteration.id = myIterations.length + 1;
+    
     myIterations.push(newIteration);
     localStorage.setItem("myIterations", JSON.stringify(myIterations));
   } catch (error) {
@@ -22,7 +28,7 @@ export const addIterationToLocalStorage = (newIteration) => {
  *
  * @returns { array } myIterations from local storage
  */
-export const getMyIterationsfromLocalStorage = () => {
+export const getMyIterationsFromLocalStorage = () => {
   return JSON.parse(localStorage.getItem("myIterations"));
 };
 
