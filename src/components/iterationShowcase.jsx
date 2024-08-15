@@ -60,7 +60,7 @@ const IterationShowcase = (props) => {
 
   return (
     <>
-      <h1>{myTitle}</h1>
+      <h1 data-testid="selected-iteration-title">{myTitle}</h1>
       <div>
         <p>Datum: {new Date(myIteration.createdAt).toString()}</p>
         <p>

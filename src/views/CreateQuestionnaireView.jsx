@@ -7,6 +7,8 @@ import Box from "@mui/material/Box";
 import MobileStepper from "@mui/material/MobileStepper";
 import Question from "../components/new-iteration/Question.jsx";
 
+//import * as localStorageHelper from "../helpers/localStorageHelper.js";
+
 /**
  * A React component that represents the view for creating a new iteration.
  *

@@ -67,7 +67,8 @@ const DashboardView = (props) => {
           return (
             <div
               key={iteration.id}
-              className="iteration-dashboard-container"
+              className="iterations-container"
+              style={selectedIteration && selectedIteration.id === iteration.id ? selectedIterationContainerStyle : myIterationsContainerStyle}
               onClick={() => openIterationShowcase(iteration.id)}
             >
               <div className="iteration-title">{iteration.myTitle}</div>
@@ -91,6 +92,14 @@ const DashboardView = (props) => {
   const myIterationsContainerStyle = {
     padding: "1rem",
     margin: "1rem",
+  };
+
+  const selectedIterationContainerStyle = {
+    padding: "1rem",
+    margin: "1rem",
+    border: "2px solid black",
+    borderRadius: "4px",
+    backgroundColor: "#f0f0f0",
   };
 
   const selectedIterationShowcaseContainerStyle = {
@@ -117,7 +126,7 @@ const DashboardView = (props) => {
         </div>
       </div>
       <div
-        className="selected-iteration-showcase-container"
+        className="iteration-showcase-container"
         style={selectedIterationShowcaseContainerStyle}
       >
         {getIterationShowcase()}
