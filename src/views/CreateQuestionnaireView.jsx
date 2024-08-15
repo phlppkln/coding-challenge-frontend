@@ -38,13 +38,15 @@ function CreateIterationView(props) {
   }, [questionStepFinished, activeQuestionStep, myTitle]);
 
   useEffect(() => {
-    // load new questionnaire from json
+    // load new questionnaire from json src/data/questions.json
+    
     if (newQuestionnaireText.length === 0) {
-      fetch("data/questions.json")
+      fetch("/src/data/questions.json")
         .then((response) => response.json())
         .then((data) => setQuestionnaireText(data))
         .catch((error) => console.error(error));
     }
+
 
     if (newQuestionnaireText.length > 0 && myQuestionnaire.length === 0) {
       createMyQuestionnaire();
@@ -54,6 +56,7 @@ function CreateIterationView(props) {
   useEffect(() => {
     if (myQuestionnaire.length > 0) {
       fillMyQuestionnaireSteps();
+      console.log(myQuestionnaire);
     }
   }, [myQuestionnaire]);
 
