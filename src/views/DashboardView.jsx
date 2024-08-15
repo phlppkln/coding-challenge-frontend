@@ -49,6 +49,7 @@ const DashboardView = (props) => {
     setMyIterations([]);
   };
 
+  // sort myIterations by title asc if myIterations changes
   const sortedIterations = useMemo(() => {
     return myIterations.sort((a, b) => (a.myTitle > b.myTitle ? 1 : -1));
   }, [myIterations]);
@@ -60,13 +61,7 @@ const DashboardView = (props) => {
    */
   const loadMyIterationsList = () => {
     return (
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-        }}
-      >
+      <div>
         {sortedIterations.map((iteration) => {
           return (
             <div
@@ -90,7 +85,10 @@ const DashboardView = (props) => {
   const getIterationShowcaseContainer = () => {
     if (selectedIteration) {
       return (
-        <div style={selectedIterationShowcaseContainerStyle}>
+        <div
+          className="iteration-showcase-container col"
+          style={selectedIterationShowcaseContainerStyle}
+        >
           {getIterationShowcase()}
         </div>
       );
@@ -135,7 +133,14 @@ const DashboardView = (props) => {
 
   return (
     <div className="dashboard-container row" style={myStyle}>
-      <div className="my-iterations-container col">
+      <div
+        className="my-iterations-container col"
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
         <h1>My Iterations</h1>
         {loadMyIterationsList()}
         <div className="button-bar row">
@@ -145,9 +150,7 @@ const DashboardView = (props) => {
           </Button>
         </div>
       </div>
-      <div className="iteration-showcase-container col">
-        {getIterationShowcaseContainer()}
-      </div>
+      {getIterationShowcaseContainer()}
     </div>
   );
 };

@@ -33,7 +33,7 @@ const IterationShowcase = (props) => {
           <h3>{answer.question}</h3>
         </div>
         <div>
-          Antworten:
+          Answers:
           {answer.answers.map((answerResults, index) => {
             return (
               <div
@@ -62,10 +62,10 @@ const IterationShowcase = (props) => {
     <>
       <h1 data-testid="selected-iteration-title">{myTitle}</h1>
       <div>
-        <p>Datum: {new Date(myIteration.createdAt).toString()}</p>
+        <p>Date: {new Date(myIteration.createdAt).toString()}</p>
         <p>
           Status:{" "}
-          {myIteration.finished ? "abgeschlossen" : "nicht abgeschlossen"}
+          {myIteration.finished ? "completed" : "not completed"}
         </p>
       </div>
 

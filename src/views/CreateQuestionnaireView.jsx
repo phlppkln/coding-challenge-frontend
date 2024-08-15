@@ -11,16 +11,22 @@ import * as localStorageHelper from "../helpers/localStorageHelper.js";
 
 /**
  * A React component that represents the view for creating a new iteration.
+ * First we get the questions from the JSON file. We then construct an array of Question components for the stepper.
+ * We then render the stepper with the Question components.
+ * If we click the create button, we save the title and the questions in the local storage and navigate to the dashboard view.
+ *
+ * Error handling is done in this component. We show an error message if the title is not set. We show an error message if the question is not finished (at least two answers need to be selected).
  *
  * @param {object} props - The properties passed to the component.
  * @return {JSX.Element} The JSX element representing the component.
  */
 function CreateIterationView(props) {
-  const [questionnaireSteps, setQuestionnaireSteps] = useState([]);
-  const [activeQuestionStep, setActiveQuestionStep] = useState(0);
-  const [questionStepFinished, setQuestionStepFinished] = useState(false);
-  const [showErrorMessage, setShowErrorMessage] = useState(false);
-  const [showErrorMessageMissingTitle, setShowErrorMessageMissingTitle] = useState(false);
+  const [questionnaireSteps, setQuestionnaireSteps] = useState([]); // Question.jsx views for the questionnaire stepper
+  const [activeQuestionStep, setActiveQuestionStep] = useState(0); // Index of the active question step
+  const [questionStepFinished, setQuestionStepFinished] = useState(false); // true if current question step is finished
+  const [showErrorMessage, setShowErrorMessage] = useState(false); // true if there is an error with the current question step
+  const [showErrorMessageMissingTitle, setShowErrorMessageMissingTitle] =
+    useState(false); // true if the title is not set
 
   const [newQuestionnaireText, setQuestionnaireText] = useState([]);
   const [myTitle, setMyTitle] = useState("");
@@ -29,15 +35,18 @@ function CreateIterationView(props) {
   const [createDisabled, setCreateDisabled] = useState(true);
 
   useEffect(() => {
+    // reset question step finished and show error message if active question step changes
     setQuestionStepFinished(false);
     setShowErrorMessage(false);
   }, [activeQuestionStep]);
 
   useEffect(() => {
+    // check if create button should be disabled
     isCreateDisabled();
   }, [questionStepFinished, activeQuestionStep, myTitle]);
 
-  useEffect(() => {    
+  useEffect(() => {
+    // fetch questions from json file
     if (newQuestionnaireText.length === 0) {
       fetch("/data/questions.json")
         .then((response) => response.json())
@@ -45,18 +54,22 @@ function CreateIterationView(props) {
         .catch((error) => console.error(error));
     }
 
-
+    // if newQuestionnaireText is not empty and myQuestionnaire is empty, create myQuestionnaire
     if (newQuestionnaireText.length > 0 && myQuestionnaire.length === 0) {
       createMyQuestionnaire();
     }
   }, [newQuestionnaireText]);
 
   useEffect(() => {
+    // if myQuestionnaire is not empty, fill myQuestionnaireSteps
     if (myQuestionnaire.length > 0) {
       fillMyQuestionnaireSteps();
     }
   }, [myQuestionnaire]);
 
+  /**
+   * Fills the questionnaire steps with questions from the myQuestionnaire array.
+   */
   const fillMyQuestionnaireSteps = () => {
     let tmps = [];
     for (let i = 0; i < myQuestionnaire.length; i++) {
@@ -75,6 +88,7 @@ function CreateIterationView(props) {
     setQuestionnaireSteps(tmps);
   };
 
+  // wrapper functions for questionStepFinished state
   const handleQuestionFinished = () => {
     setQuestionStepFinished(true);
   };
@@ -118,17 +132,21 @@ function CreateIterationView(props) {
       myTitle: myTitle,
       myAnswers: myQuestionnaire,
     };
-    
+
     localStorageHelper.addIterationToLocalStorage(newIteration);
   };
 
   const createIterationBtnClicked = () => {
-    if(myTitle === "") {
+    // check if title is set
+    if (myTitle === "") {
       setShowErrorMessageMissingTitle(true);
-    } 
+    }
+    // check if question is finished
     if (!questionStepFinished) {
       setShowErrorMessage(true);
     }
+
+    // if title is set and question is finished
     if (myTitle !== "" && questionStepFinished) {
       addIterationToLocalStorage(true);
       props.startView("dashboard");
@@ -141,7 +159,6 @@ function CreateIterationView(props) {
   };
 
   const updateMyQuestionnaireAnswers = (questionText, answers) => {
-    // update myQuestionnaire
     // find question with questionText from myQuestionnaire
     let myQuestion = myQuestionnaire.find((q) => q.question === questionText);
     //update answers of myQuestionnaire where myQuestionnaire.question = questionText
@@ -159,14 +176,8 @@ function CreateIterationView(props) {
     }
   };
 
-  const handleBack = () => {
-    setActiveQuestionStep((prevActiveStep) => prevActiveStep - 1);
-  };
-
   const isCreateDisabled = () => {
-    if (
-      activeQuestionStep != questionnaireSteps.length - 1
-    ) {
+    if (activeQuestionStep != questionnaireSteps.length - 1) {
       setCreateDisabled(true);
     } else {
       setCreateDisabled(false);
@@ -182,7 +193,7 @@ function CreateIterationView(props) {
   return (
     <>
       <div style={myStyle}>
-        <h1>Neue Iteration</h1>
+        <h1>New Iteration</h1>
         <TextField
           id="outlined-basic"
           label="Your Iteration Title (required)"
@@ -210,18 +221,21 @@ function CreateIterationView(props) {
               Next
             </Button>
           }
-          /*           backButton={
-            <Button
-              size="small"
-              onClick={handleBack}
-              disabled={activeQuestionStep === 0}
-            >
-              Back
-            </Button>
-          } */
         />
-        <div>{showErrorMessage ? (<div style={{color: "red"}}><p>Please select at least two answers</p></div>) : null}</div>
-        <div>{showErrorMessageMissingTitle ? (<div style={{color: "red"}}><p>Please enter a title</p></div>) : null}</div>
+        <div>
+          {showErrorMessage ? (
+            <div style={{ color: "red" }}>
+              <p>Please select at least one answer</p>
+            </div>
+          ) : null}
+        </div>
+        <div>
+          {showErrorMessageMissingTitle ? (
+            <div style={{ color: "red" }}>
+              <p>Please enter a title</p>
+            </div>
+          ) : null}
+        </div>
         <div className="button-bar">
           <Button variant="outlined" onClick={cancelBtnClicked}>
             Cancel

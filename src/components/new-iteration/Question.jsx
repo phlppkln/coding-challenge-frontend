@@ -28,8 +28,8 @@ const Question = (props) => {
     // update parent component
     props.updateMyParentAnswers(props.questionText, myAnswers);
 
-    // if at least two answers are selected, enable next button in parent component
-    if (myAnswers.filter((a) => a.selected).length >= 2) {
+    // if at least one answer is selected, enable next button in parent component
+    if (myAnswers.filter((a) => a.selected).length >= 1) {
       props.questionFinished();
     } else {
       props.questionNotFinished();
