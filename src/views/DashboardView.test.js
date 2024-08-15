@@ -9,7 +9,7 @@ jest.mock("../helpers/localStorageHelper");
 describe(DashboardView, () => {
   // mock getMyIterationsfromLocalStorage
   beforeEach(() => {
-    localStorageHelper.getMyIterationsfromLocalStorage.mockReturnValue([
+    localStorageHelper.getMyIterationsFromLocalStorage.mockReturnValue([
       {
         id: 1,
         createdAt: new Date(),
